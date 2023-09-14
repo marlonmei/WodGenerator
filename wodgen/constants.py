@@ -11,8 +11,8 @@ SPECIAL_CHARACTERS = {
 }
 
 TIME_MAPPING = {
-    1: tuple(range(0, 5)),
-    2: tuple(range(5, 15)),
-    3: tuple(range(15, 90))
+    1: tuple(range(0, 6)),
+    2: tuple(range(5, 16)),
+    3: tuple(range(15, 91))
 }
 
