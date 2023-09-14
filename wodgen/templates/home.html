@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<button id="generate_modal_button" class="ui button primary">
+  Generate
+</button>
+
+
+<script>
+  $(document).ready(function() {
+        $("#generate_modal_button").click(function() {
+      $('.ui.modal').modal('show');
+    });
+
+      $("#generate_button").click(function() {
+        var workout_type =  $("#workout_type").val();
+        var workout_time = $("#time_domain").val();
+        console.log(workout_type);
+        $.ajax({
+          url: `/GenerateWorkout?type=${workout_type}&time=${workout_time}`,
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/json',
+          beforeSend: function(xhr, settings) {
+          console.log("AJAX Request Details:");
+          console.log("URL: " + settings.url);
+          console.log("Type: " + settings.type);
+          },
+          success: function(data) {
+            // Handle the successful response here
+            console.log("Data received:", data);
+            populateTable(data.workout); // Call a function to populate the table
+          },
+          error: function(xhr, textStatus, errorThrown) {
+        }
+      });
+    });
+    $('.ui.modal').modal('hide');
+
+      // Function to populate the table
+    function populateTable(workoutData) {
+      var tableBody = $("#workout_table tbody");
+
+      // Clear existing table rows
+      tableBody.empty();
+
+      // Add a new row with the workout data
+      var newRow = $("<tr>");
+      newRow.append(`<td data-label="Name">${workoutData.name}</td>`);
+      newRow.append(`<td data-label="Type">${workoutData.type}</td>`);
+      newRow.append(`<td data-label="Time">${workoutData.time}</td>`);
+      newRow.append(`<td data-label="Description">${workoutData.description}</td>`);
+
+      tableBody.append(newRow);
+    }
+});
+
+
+</script>
+
+<div class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Retrieve Workout
+  </div>
+  <div class="content">
+    <select id = "workout_type" class="ui dropdown">
+      <option value="">Workout Type</option>
+      <option value="AMRAP">AMRAP</option>
+      <option value="EMOM">EMOM</option>
+      <option value="FT">FOR TIME</option>
+      <option value="MASH">MASH</option>
+    </select>
+  </div>
+
+  <div class="content">
+    <select id = "time_domain" class="ui dropdown">
+      <option value="">Time Domain</option>
+      <option value=1>0 - 5 min</option>
+      <option value=2>5 - 15 min</option>
+      <option value=3>15 - 30+ min</option>
+
+    </select>
+  </div>
+  <div class="actions">
+    <div class="ui black deny button">
+      Back
+    </div>
+    <div id = "generate_button" class="ui positive right labeled icon button">
+      Generate
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>
+
+<table id= "workout_table" class="ui celled table">
+  <thead>
+    <tr><th>Name</th>
+    <th>Type</th>
+    <th>Time</th>
+    <th>Description</th>
+
+  </tr></thead>
+  <tbody>
+    <tr>
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+{% endblock %}
